@@ -1,0 +1,476 @@
+--- gsoap2-svn/gsoap/import/wsdd10-orig.h	2012-06-26 21:09:44.000000000 +0800
++++ gsoap2-svn/gsoap/import/wsdd10.h	2012-06-26 21:13:43.000000000 +0800
+@@ -2,7 +2,7 @@
+ 	wsdd10.h WS-Discovery 1.0 2005
+ 
+ 	Generated with:
+-	wsdl2h -cyex -o wsdd.h -t WS/WS-typemap.dat WS/discovery.xsd
++	wsdl2h -cyex -o wsdd10.h -t WS/WS-typemap.dat WS/discovery.xsd
+ 
+         Modified by Robert van Engelen:
+ 
+@@ -35,10 +35,10 @@
+  *                                                                            *
+ \******************************************************************************/
+ 
+-#define SOAP_NAMESPACE_OF_wsdd	"http://schemas.xmlsoap.org/ws/2005/04/discovery"
+-//gsoap wsdd  schema import:	http://schemas.xmlsoap.org/ws/2005/04/discovery
+-//gsoap wsdd  schema elementForm:	qualified
+-//gsoap wsdd  schema attributeForm:	unqualified
++#define SOAP_NAMESPACE_OF_wsdd10	"http://schemas.xmlsoap.org/ws/2005/04/discovery"
++//gsoap wsdd10  schema import:	http://schemas.xmlsoap.org/ws/2005/04/discovery
++//gsoap wsdd10  schema elementForm:	qualified
++//gsoap wsdd10  schema attributeForm:	unqualified
+ 
+ /******************************************************************************\
+  *                                                                            *
+@@ -50,41 +50,41 @@
+ // Imported element "http://schemas.xmlsoap.org/ws/2004/08/addressing":EndpointReference declared as _wsa__EndpointReference
+ 
+ 
+-/// Typedef synonym for struct wsdd__HelloType.
+-typedef struct wsdd__HelloType wsdd__HelloType;
++/// Typedef synonym for struct wsdd10__HelloType.
++typedef struct wsdd10__HelloType wsdd10__HelloType;
+ 
+-/// Typedef synonym for struct wsdd__ByeType.
+-typedef struct wsdd__ByeType wsdd__ByeType;
++/// Typedef synonym for struct wsdd10__ByeType.
++typedef struct wsdd10__ByeType wsdd10__ByeType;
+ 
+-/// Typedef synonym for struct wsdd__ProbeType.
+-typedef struct wsdd__ProbeType wsdd__ProbeType;
++/// Typedef synonym for struct wsdd10__ProbeType.
++typedef struct wsdd10__ProbeType wsdd10__ProbeType;
+ 
+-/// Typedef synonym for struct wsdd__ProbeMatchesType.
+-typedef struct wsdd__ProbeMatchesType wsdd__ProbeMatchesType;
++/// Typedef synonym for struct wsdd10__ProbeMatchesType.
++typedef struct wsdd10__ProbeMatchesType wsdd10__ProbeMatchesType;
+ 
+-/// Typedef synonym for struct wsdd__ProbeMatchType.
+-typedef struct wsdd__ProbeMatchType wsdd__ProbeMatchType;
++/// Typedef synonym for struct wsdd10__ProbeMatchType.
++typedef struct wsdd10__ProbeMatchType wsdd10__ProbeMatchType;
+ 
+-/// Typedef synonym for struct wsdd__ResolveType.
+-typedef struct wsdd__ResolveType wsdd__ResolveType;
++/// Typedef synonym for struct wsdd10__ResolveType.
++typedef struct wsdd10__ResolveType wsdd10__ResolveType;
+ 
+-/// Typedef synonym for struct wsdd__ResolveMatchesType.
+-typedef struct wsdd__ResolveMatchesType wsdd__ResolveMatchesType;
++/// Typedef synonym for struct wsdd10__ResolveMatchesType.
++typedef struct wsdd10__ResolveMatchesType wsdd10__ResolveMatchesType;
+ 
+-/// Typedef synonym for struct wsdd__ResolveMatchType.
+-typedef struct wsdd__ResolveMatchType wsdd__ResolveMatchType;
++/// Typedef synonym for struct wsdd10__ResolveMatchType.
++typedef struct wsdd10__ResolveMatchType wsdd10__ResolveMatchType;
+ 
+-/// Typedef synonym for struct wsdd__ScopesType.
+-typedef struct wsdd__ScopesType wsdd__ScopesType;
++/// Typedef synonym for struct wsdd10__ScopesType.
++typedef struct wsdd10__ScopesType wsdd10__ScopesType;
+ 
+-/// Typedef synonym for struct wsdd__SecurityType.
+-typedef struct wsdd__SecurityType wsdd__SecurityType;
++/// Typedef synonym for struct wsdd10__SecurityType.
++typedef struct wsdd10__SecurityType wsdd10__SecurityType;
+ 
+-/// Typedef synonym for struct wsdd__SigType.
+-typedef struct wsdd__SigType wsdd__SigType;
++/// Typedef synonym for struct wsdd10__SigType.
++typedef struct wsdd10__SigType wsdd10__SigType;
+ 
+-/// Typedef synonym for struct wsdd__AppSequenceType.
+-typedef struct wsdd__AppSequenceType wsdd__AppSequenceType;
++/// Typedef synonym for struct wsdd10__AppSequenceType.
++typedef struct wsdd10__AppSequenceType wsdd10__AppSequenceType;
+ 
+ /******************************************************************************\
+  *                                                                            *
+@@ -95,21 +95,21 @@
+ 
+ 
+ /// "http://schemas.xmlsoap.org/ws/2005/04/discovery":QNameListType is a simpleType containing a whitespace separated list of xs:QName.
+-typedef _QName wsdd__QNameListType;
++typedef _QName wsdd10__QNameListType;
+ 
+ /// "http://schemas.xmlsoap.org/ws/2005/04/discovery":UriListType is a simpleType containing a whitespace separated list of xs:anyURI.
+-typedef char* wsdd__UriListType;
++typedef char* wsdd10__UriListType;
+ 
+ /// union of values "tns:FaultCodeType xs:QName"
+-typedef char* wsdd__FaultCodeOpenType;
++typedef char* wsdd10__FaultCodeOpenType;
+ 
+ /// "http://schemas.xmlsoap.org/ws/2005/04/discovery":FaultCodeType is a simpleType restriction of xs:QName.
+-enum wsdd__FaultCodeType
++enum wsdd10__FaultCodeType
+ {
+-	wsdd__MatchingRuleNotSupported,	///< xs:QName value=""http://schemas.xmlsoap.org/ws/2005/04/discovery":MatchingRuleNotSupported"
++	wsdd10__MatchingRuleNotSupported,	///< xs:QName value=""http://schemas.xmlsoap.org/ws/2005/04/discovery":MatchingRuleNotSupported"
+ };
+-/// Typedef synonym for enum wsdd__FaultCodeType.
+-typedef enum wsdd__FaultCodeType wsdd__FaultCodeType;
++/// Typedef synonym for enum wsdd10__FaultCodeType.
++typedef enum wsdd10__FaultCodeType wsdd10__FaultCodeType;
+ 
+ /******************************************************************************\
+  *                                                                            *
+@@ -120,16 +120,16 @@
+ 
+ 
+ /// "http://schemas.xmlsoap.org/ws/2005/04/discovery":HelloType is a complexType.
+-struct wsdd__HelloType
++struct wsdd10__HelloType
+ {
+ /// Imported element reference "http://schemas.xmlsoap.org/ws/2004/08/addressing":EndpointReference.
+     _wsa__EndpointReference              wsa__EndpointReference         1;	///< Required element.
+ /// Element reference "http://schemas.xmlsoap.org/ws/2005/04/discovery":Types.
+-    wsdd__QNameListType                  Types                          0;	///< Optional element.
++    wsdd10__QNameListType                  Types                          0;	///< Optional element.
+ /// Element reference "http://schemas.xmlsoap.org/ws/2005/04/discovery":Scopes.
+-    struct wsdd__ScopesType*             Scopes                         0;	///< Optional element.
++    struct wsdd10__ScopesType*             Scopes                         0;	///< Optional element.
+ /// Element reference "http://schemas.xmlsoap.org/ws/2005/04/discovery":XAddrs.
+-    wsdd__UriListType                    XAddrs                         0;	///< Optional element.
++    wsdd10__UriListType                    XAddrs                         0;	///< Optional element.
+ /// Element reference "http://schemas.xmlsoap.org/ws/2005/04/discovery":MetadataVersion.
+     unsigned int                         MetadataVersion                1;	///< Required element.
+ /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
+@@ -145,16 +145,16 @@
+ };
+ 
+ /// "http://schemas.xmlsoap.org/ws/2005/04/discovery":ByeType is a complexType.
+-struct wsdd__ByeType
++struct wsdd10__ByeType
+ {
+ /// Imported element reference "http://schemas.xmlsoap.org/ws/2004/08/addressing":EndpointReference.
+     _wsa__EndpointReference              wsa__EndpointReference         1;	///< Required element.
+ /// Element reference "http://schemas.xmlsoap.org/ws/2005/04/discovery":Types.
+-    wsdd__QNameListType                  Types                          0;	///< Optional element.
++    wsdd10__QNameListType                  Types                          0;	///< Optional element.
+ /// Element reference "http://schemas.xmlsoap.org/ws/2005/04/discovery":Scopes.
+-    struct wsdd__ScopesType*             Scopes                         0;	///< Optional element.
++    struct wsdd10__ScopesType*             Scopes                         0;	///< Optional element.
+ /// Element reference "http://schemas.xmlsoap.org/ws/2005/04/discovery":XAddrs.
+-    wsdd__UriListType                    XAddrs                         0;	///< Optional element.
++    wsdd10__UriListType                    XAddrs                         0;	///< Optional element.
+ /// Element reference "http://schemas.xmlsoap.org/ws/2005/04/discovery":MetadataVersion.
+     unsigned int*                        MetadataVersion                0;	///< Optional element.
+ /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
+@@ -170,12 +170,12 @@
+ };
+ 
+ /// "http://schemas.xmlsoap.org/ws/2005/04/discovery":ProbeType is a complexType.
+-struct wsdd__ProbeType
++struct wsdd10__ProbeType
+ {
+ /// Element reference "http://schemas.xmlsoap.org/ws/2005/04/discovery":Types.
+-    wsdd__QNameListType                  Types                          0;	///< Optional element.
++    wsdd10__QNameListType                  Types                          0;	///< Optional element.
+ /// Element reference "http://schemas.xmlsoap.org/ws/2005/04/discovery":Scopes.
+-    struct wsdd__ScopesType*             Scopes                         0;	///< Optional element.
++    struct wsdd10__ScopesType*             Scopes                         0;	///< Optional element.
+ /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
+ /// TODO: Schema extensibility is user-definable.
+ ///       Consult the protocol documentation to change or insert declarations.
+@@ -189,12 +189,12 @@
+ };
+ 
+ /// "http://schemas.xmlsoap.org/ws/2005/04/discovery":ProbeMatchesType is a complexType.
+-struct wsdd__ProbeMatchesType
++struct wsdd10__ProbeMatchesType
+ {
+-/// Size of array of struct wsdd__ProbeMatchType* is 0..unbounded
++/// Size of array of struct wsdd10__ProbeMatchType* is 0..unbounded
+    $int                                  __sizeProbeMatch               0;
+-/// Array struct wsdd__ProbeMatchType* of length 0..unbounded
+-    struct wsdd__ProbeMatchType*         ProbeMatch                     0;
++/// Array struct wsdd10__ProbeMatchType* of length 0..unbounded
++    struct wsdd10__ProbeMatchType*         ProbeMatch                     0;
+ /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
+ /// TODO: Schema extensibility is user-definable.
+ ///       Consult the protocol documentation to change or insert declarations.
+@@ -208,16 +208,16 @@
+ };
+ 
+ /// "http://schemas.xmlsoap.org/ws/2005/04/discovery":ProbeMatchType is a complexType.
+-struct wsdd__ProbeMatchType
++struct wsdd10__ProbeMatchType
+ {
+ /// Imported element reference "http://schemas.xmlsoap.org/ws/2004/08/addressing":EndpointReference.
+     _wsa__EndpointReference              wsa__EndpointReference         1;	///< Required element.
+ /// Element reference "http://schemas.xmlsoap.org/ws/2005/04/discovery":Types.
+-    wsdd__QNameListType                  Types                          0;	///< Optional element.
++    wsdd10__QNameListType                  Types                          0;	///< Optional element.
+ /// Element reference "http://schemas.xmlsoap.org/ws/2005/04/discovery":Scopes.
+-    struct wsdd__ScopesType*             Scopes                         0;	///< Optional element.
++    struct wsdd10__ScopesType*             Scopes                         0;	///< Optional element.
+ /// Element reference "http://schemas.xmlsoap.org/ws/2005/04/discovery":XAddrs.
+-    wsdd__UriListType                    XAddrs                         0;	///< Optional element.
++    wsdd10__UriListType                    XAddrs                         0;	///< Optional element.
+ /// Element reference "http://schemas.xmlsoap.org/ws/2005/04/discovery":MetadataVersion.
+     unsigned int                         MetadataVersion                1;	///< Required element.
+ /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
+@@ -233,7 +233,7 @@
+ };
+ 
+ /// "http://schemas.xmlsoap.org/ws/2005/04/discovery":ResolveType is a complexType.
+-struct wsdd__ResolveType
++struct wsdd10__ResolveType
+ {
+ /// Imported element reference "http://schemas.xmlsoap.org/ws/2004/08/addressing":EndpointReference.
+     _wsa__EndpointReference              wsa__EndpointReference         1;	///< Required element.
+@@ -250,10 +250,10 @@
+ };
+ 
+ /// "http://schemas.xmlsoap.org/ws/2005/04/discovery":ResolveMatchesType is a complexType.
+-struct wsdd__ResolveMatchesType
++struct wsdd10__ResolveMatchesType
+ {
+ /// Element ResolveMatch of type "http://schemas.xmlsoap.org/ws/2005/04/discovery":ResolveMatchType.
+-    struct wsdd__ResolveMatchType*       ResolveMatch                   0;	///< Optional element.
++    struct wsdd10__ResolveMatchType*       ResolveMatch                   0;	///< Optional element.
+ /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
+ /// TODO: Schema extensibility is user-definable.
+ ///       Consult the protocol documentation to change or insert declarations.
+@@ -267,16 +267,16 @@
+ };
+ 
+ /// "http://schemas.xmlsoap.org/ws/2005/04/discovery":ResolveMatchType is a complexType.
+-struct wsdd__ResolveMatchType
++struct wsdd10__ResolveMatchType
+ {
+ /// Imported element reference "http://schemas.xmlsoap.org/ws/2004/08/addressing":EndpointReference.
+     _wsa__EndpointReference              wsa__EndpointReference         1;	///< Required element.
+ /// Element reference "http://schemas.xmlsoap.org/ws/2005/04/discovery":Types.
+-    wsdd__QNameListType                  Types                          0;	///< Optional element.
++    wsdd10__QNameListType                  Types                          0;	///< Optional element.
+ /// Element reference "http://schemas.xmlsoap.org/ws/2005/04/discovery":Scopes.
+-    struct wsdd__ScopesType*             Scopes                         0;	///< Optional element.
++    struct wsdd10__ScopesType*             Scopes                         0;	///< Optional element.
+ /// Element reference "http://schemas.xmlsoap.org/ws/2005/04/discovery":XAddrs.
+-    wsdd__UriListType                    XAddrs                         0;	///< Optional element.
++    wsdd10__UriListType                    XAddrs                         0;	///< Optional element.
+ /// Element reference "http://schemas.xmlsoap.org/ws/2005/04/discovery":MetadataVersion.
+     unsigned int                         MetadataVersion                1;	///< Required element.
+ /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
+@@ -292,10 +292,10 @@
+ };
+ 
+ /// "http://schemas.xmlsoap.org/ws/2005/04/discovery":SecurityType is a complexType.
+-struct wsdd__SecurityType
++struct wsdd10__SecurityType
+ {
+ /// Element reference "http://schemas.xmlsoap.org/ws/2005/04/discovery":Sig.
+-    struct wsdd__SigType*                Sig                            0;	///< Optional element.
++    struct wsdd10__SigType*                Sig                            0;	///< Optional element.
+ /// <anyAttribute namespace="##other">
+ /// TODO: Schema extensibility is user-definable.
+ ///       Consult the protocol documentation to change or insert declarations.
+@@ -304,7 +304,7 @@
+ };
+ 
+ /// "http://schemas.xmlsoap.org/ws/2005/04/discovery":SigType is a complexType.
+-struct wsdd__SigType
++struct wsdd10__SigType
+ {
+ /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
+ /// TODO: Schema extensibility is user-definable.
+@@ -327,10 +327,10 @@
+ };
+ 
+ /// "http://schemas.xmlsoap.org/ws/2005/04/discovery":ScopesType is a complexType with simpleContent.
+-struct wsdd__ScopesType
++struct wsdd10__ScopesType
+ {
+ /// __item wraps '"http://schemas.xmlsoap.org/ws/2005/04/discovery":UriListType' simpleContent.
+-    wsdd__UriListType                    __item                        ;
++    wsdd10__UriListType                    __item                        ;
+ /// Attribute MatchBy of type xs:anyURI.
+    @char*                                MatchBy                        0;	///< Optional attribute.
+ /// <anyAttribute namespace="##other">
+@@ -341,7 +341,7 @@
+ };
+ 
+ /// "http://schemas.xmlsoap.org/ws/2005/04/discovery":AppSequenceType is a complexType with complexContent restriction of xs:anyType.
+-struct wsdd__AppSequenceType
++struct wsdd10__AppSequenceType
+ {
+ /// Attribute InstanceId of type xs:unsignedInt.
+    @unsigned int                         InstanceId                     1;	///< Required attribute.
+@@ -453,38 +453,38 @@
+   - a buffer, using the soap->fsend() callback
+ 
+ 
+-@section wsdd Top-level root elements of schema "http://schemas.xmlsoap.org/ws/2005/04/discovery"
++@section wsdd10 Top-level root elements of schema "http://schemas.xmlsoap.org/ws/2005/04/discovery"
+ 
+-  - <wsdd:Hello> (use wsdl2h option -g to auto-generate)
++  - <wsdd10:Hello> (use wsdl2h option -g to auto-generate)
+ 
+-  - <wsdd:Bye> (use wsdl2h option -g to auto-generate)
++  - <wsdd10:Bye> (use wsdl2h option -g to auto-generate)
+ 
+-  - <wsdd:Probe> (use wsdl2h option -g to auto-generate)
++  - <wsdd10:Probe> (use wsdl2h option -g to auto-generate)
+ 
+-  - <wsdd:ProbeMatches> (use wsdl2h option -g to auto-generate)
++  - <wsdd10:ProbeMatches> (use wsdl2h option -g to auto-generate)
+ 
+-  - <wsdd:Resolve> (use wsdl2h option -g to auto-generate)
++  - <wsdd10:Resolve> (use wsdl2h option -g to auto-generate)
+ 
+-  - <wsdd:ResolveMatches> (use wsdl2h option -g to auto-generate)
++  - <wsdd10:ResolveMatches> (use wsdl2h option -g to auto-generate)
+ 
+-  - <wsdd:Types> (use wsdl2h option -g to auto-generate)
++  - <wsdd10:Types> (use wsdl2h option -g to auto-generate)
+ 
+-  - <wsdd:Scopes> (use wsdl2h option -g to auto-generate)
++  - <wsdd10:Scopes> (use wsdl2h option -g to auto-generate)
+ 
+-  - <wsdd:XAddrs> (use wsdl2h option -g to auto-generate)
++  - <wsdd10:XAddrs> (use wsdl2h option -g to auto-generate)
+ 
+-  - <wsdd:MetadataVersion> (use wsdl2h option -g to auto-generate)
++  - <wsdd10:MetadataVersion> (use wsdl2h option -g to auto-generate)
+ 
+-  - <wsdd:SupportedMatchingRules> (use wsdl2h option -g to auto-generate)
++  - <wsdd10:SupportedMatchingRules> (use wsdl2h option -g to auto-generate)
+ 
+-  - <wsdd:Security> (use wsdl2h option -g to auto-generate)
++  - <wsdd10:Security> (use wsdl2h option -g to auto-generate)
+ 
+-  - <wsdd:Sig> (use wsdl2h option -g to auto-generate)
++  - <wsdd10:Sig> (use wsdl2h option -g to auto-generate)
+ 
+-  - <wsdd:AppSequence> (use wsdl2h option -g to auto-generate)
++  - <wsdd10:AppSequence> (use wsdl2h option -g to auto-generate)
+ 
+ */
+ 
+-#import "wsdx.h"
++#import "wsdx10.h"
+ 
+-/* End of wsdd2.h */
++/* End of wsdd10.h */
+--- gsoap2-svn/gsoap/import/wsdx10-orig.h	1970-01-01 08:00:00.000000000 +0800
++++ gsoap2-svn/gsoap/import/wsdx10.h	2012-06-26 21:15:02.000000000 +0800
+@@ -0,0 +1,113 @@
++/*
++	wsdx10.h
++
++	WS-Discovery definitions:
++	SOAP Header definitions for WS-Discovery
++	WSDD operations Hello, Bye, Probe, ProbeMatches, Resolve, ResolveMatches
++
++	Imported by import/wsdd10.h
++
++gSOAP XML Web services tools
++Copyright (C) 2000-2011, Robert van Engelen, Genivia Inc., All Rights Reserved.
++This part of the software is released under ONE of the following licenses:
++GPL, or the gSOAP public license, or Genivia's license for commercial use.
++--------------------------------------------------------------------------------
++gSOAP public license.
++
++The contents of this file are subject to the gSOAP Public License Version 1.3
++(the "License"); you may not use this file except in compliance with the
++License. You may obtain a copy of the License at
++http://www.cs.fsu.edu/~engelen/soaplicense.html
++Software distributed under the License is distributed on an "AS IS" basis,
++WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++for the specific language governing rights and limitations under the License.
++
++The Initial Developer of the Original Code is Robert A. van Engelen.
++Copyright (C) 2000-2011, Robert van Engelen, Genivia Inc., All Rights Reserved.
++--------------------------------------------------------------------------------
++GPL license.
++
++This program is free software; you can redistribute it and/or modify it under
++the terms of the GNU General Public License as published by the Free Software
++Foundation; either version 2 of the License, or (at your option) any later
++version.
++
++This program is distributed in the hope that it will be useful, but WITHOUT ANY
++WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
++PARTICULAR PURPOSE. See the GNU General Public License for more details.
++
++You should have received a copy of the GNU General Public License along with
++this program; if not, write to the Free Software Foundation, Inc., 59 Temple
++Place, Suite 330, Boston, MA 02111-1307 USA
++
++Author contact information:
++engelen@genivia.com / engelen@acm.org
++
++This program is released under the GPL with the additional exemption that
++compiling, linking, and/or using OpenSSL is allowed.
++--------------------------------------------------------------------------------
++A commercial use license is available from Genivia, Inc., contact@genivia.com
++--------------------------------------------------------------------------------
++*/
++
++struct SOAP_ENV__Header
++{
++  wsdd10__AppSequenceType           *wsdd10__AppSequence             0;
++};
++
++//gsoap wsdd10 service name: wsdd10
++
++//gsoap wsdd10 service method-header-part:     Hello wsa5__RelatesTo
++//gsoap wsdd10 service method-header-part:     Hello wsa5__From
++//gsoap wsdd10 service method-header-part:     Hello wsa5__ReplyTo
++//gsoap wsdd10 service method-header-part:     Hello wsa5__FaultTo
++//gsoap wsdd10 service method-header-part:     Hello wsa5__To
++//gsoap wsdd10 service method-header-part:     Hello wsa5__Action
++//gsoap wsdd10 service method-action:          Hello http://docs.oasis-open.org/ws-dd/ns/discovery/2009/01/Hello
++int __wsdd10__Hello(struct wsdd10__HelloType *wsdd10__Hello, void);
++
++//gsoap wsdd10 service method-header-part:     Bye wsa5__RelatesTo
++//gsoap wsdd10 service method-header-part:     Bye wsa5__From
++//gsoap wsdd10 service method-header-part:     Bye wsa5__ReplyTo
++//gsoap wsdd10 service method-header-part:     Bye wsa5__FaultTo
++//gsoap wsdd10 service method-header-part:     Bye wsa5__To
++//gsoap wsdd10 service method-header-part:     Bye wsa5__Action
++//gsoap wsdd10 service method-action:          Bye http://docs.oasis-open.org/ws-dd/ns/discovery/2009/01/Bye
++int __wsdd10__Bye(struct wsdd10__ByeType *wsdd10__Bye, void);
++
++//gsoap wsdd10 service method-header-part:     Probe wsa5__RelatesTo
++//gsoap wsdd10 service method-header-part:     Probe wsa5__From
++//gsoap wsdd10 service method-header-part:     Probe wsa5__ReplyTo
++//gsoap wsdd10 service method-header-part:     Probe wsa5__FaultTo
++//gsoap wsdd10 service method-header-part:     Probe wsa5__To
++//gsoap wsdd10 service method-header-part:     Probe wsa5__Action
++//gsoap wsdd10 service method-action:          Probe http://docs.oasis-open.org/ws-dd/ns/discovery/2009/01/Probe
++int __wsdd10__Probe(struct wsdd10__ProbeType *wsdd10__Probe, void);
++
++//gsoap wsdd10 service method-header-part:     ProbeMatches wsa5__RelatesTo
++//gsoap wsdd10 service method-header-part:     ProbeMatches wsa5__From
++//gsoap wsdd10 service method-header-part:     ProbeMatches wsa5__ReplyTo
++//gsoap wsdd10 service method-header-part:     ProbeMatches wsa5__FaultTo
++//gsoap wsdd10 service method-header-part:     ProbeMatches wsa5__To
++//gsoap wsdd10 service method-header-part:     ProbeMatches wsa5__Action
++//gsoap wsdd10 service method-action:          ProbeMatches http://docs.oasis-open.org/ws-dd/ns/discovery/2009/01/ProbeMatches
++int __wsdd10__ProbeMatches(struct wsdd10__ProbeMatchesType *wsdd10__ProbeMatches, void);
++
++//gsoap wsdd10 service method-header-part:     Resolve wsa5__RelatesTo
++//gsoap wsdd10 service method-header-part:     Resolve wsa5__From
++//gsoap wsdd10 service method-header-part:     Resolve wsa5__ReplyTo
++//gsoap wsdd10 service method-header-part:     Resolve wsa5__FaultTo
++//gsoap wsdd10 service method-header-part:     Resolve wsa5__To
++//gsoap wsdd10 service method-header-part:     Resolve wsa5__Action
++//gsoap wsdd10 service method-action:          Resolve http://docs.oasis-open.org/ws-dd/ns/discovery/2009/01/Resolve
++int __wsdd10__Resolve(struct wsdd10__ResolveType *wsdd10__Resolve, void);
++
++//gsoap wsdd10 service method-header-part:     ResolveMatches wsa5__RelatesTo
++//gsoap wsdd10 service method-header-part:     ResolveMatches wsa5__From
++//gsoap wsdd10 service method-header-part:     ResolveMatches wsa5__ReplyTo
++//gsoap wsdd10 service method-header-part:     ResolveMatches wsa5__FaultTo
++//gsoap wsdd10 service method-header-part:     ResolveMatches wsa5__To
++//gsoap wsdd10 service method-header-part:     ResolveMatches wsa5__Action
++//gsoap wsdd10 service method-action:          ResolveMatches http://docs.oasis-open.org/ws-dd/ns/discovery/2009/01/ResolveMatches
++int __wsdd10__ResolveMatches(struct wsdd10__ResolveMatchesType *wsdd10__ResolveMatches, void);
++
