@@ -37,8 +37,8 @@ mkdir		:= @mkdir
 sed		:= @sed
 test		:= @test
 wget		:= @wget -c --no-http-keep-alive --no-cache
-soapcpp2	:= @${GSOAP2_ROOT}/bin/soapcpp2 -2 -c -L -I${GSOAP2_ROOT}/include:${GSOAP2_ROOT}/share/gsoap:${GSOAP2_ROOT}/share/gsoap/import
-wsdl2h		:= @${GSOAP2_ROOT}/bin/wsdl2h
+soapcpp2	:= @${GSOAP2_ROOT}/bin/soapcpp2 -2 -c -L -dout -I${GSOAP2_ROOT}/include:${GSOAP2_ROOT}/share/gsoap:${GSOAP2_ROOT}/share/gsoap/import
+wsdl2h		:= @${GSOAP2_ROOT}/bin/wsdl2h -t ${GSOAP2_ROOT}/share/gsoap/WS/typemap.dat
 base_href	:= http://www.onvif.org/onvif/
 
 all:
@@ -72,11 +72,11 @@ fetch: $(wsdl_files) $(xsd_files) $(xsl_files)
 #	$(echo) "Patching " $^ " for schemaLocation"
 #	$(sed) -i 's/\(\s*<xs:import namespace="http:\/\/www.onvif.org\/ver10\/schema" schemaLocation="\)\(.*\)\("\/>\)/\1onvif.xsd\3/' $^
 
-translation: gen_header gen_source
+translation: trans-wsdl trans-header
 
-gen_header: $(wsdl_files)
-	$(wsdl2h) -c -x -o onvif_ws.h $^
+trans-wsdl: $(wsdl_files)
+	$(wsdl2h) -c -x -o onvif.h $^
 
-gen_source: onvif_ws.h
-	$(soapcpp2) onvif_ws.h
+trans-header: onvif.h
+	$(soapcpp2) -ponvif $^
 
