@@ -3,6 +3,9 @@
 # Notes:
 # http proxy: 119.97.144.25:80
 #
+
+include ../../Common.mk
+
 wsdl_files := ver10/device/wsdl/devicemgmt.wsdl\
 	ver10/event/wsdl/event.wsdl\
 	ver10/display.wsdl\
@@ -37,8 +40,8 @@ mkdir		:= @mkdir
 sed		:= @sed
 test		:= @test
 wget		:= @wget -c --no-http-keep-alive --no-cache
-soapcpp2	:= @${GSOAP2_ROOT}/bin/soapcpp2 -2 -c -L -dout -I${GSOAP2_ROOT}/include:${GSOAP2_ROOT}/share/gsoap:${GSOAP2_ROOT}/share/gsoap/import
-wsdl2h		:= @${GSOAP2_ROOT}/bin/wsdl2h -t ${GSOAP2_ROOT}/share/gsoap/WS/typemap.dat
+soapcpp2	:= @${GSOAP2_ROOT}/bin/soapcpp2 -2 -c -dout -I${GSOAP2_ROOT}/include:${GSOAP2_ROOT}/share/gsoap:${GSOAP2_ROOT}/share/gsoap/import
+wsdl2h		:= @${GSOAP2_ROOT}/bin/wsdl2h -t ${GSOAP2_ROOT}/share/gsoap/WS/typemap.dat -nonvif
 base_href	:= http://www.onvif.org/onvif/
 
 all:
@@ -75,8 +78,9 @@ fetch: $(wsdl_files) $(xsd_files) $(xsl_files)
 translation: trans-wsdl trans-header
 
 trans-wsdl: $(wsdl_files)
-	$(wsdl2h) -c -x -o onvif.h $^
+	$(test) -d out || mkdir -p out
+	$(wsdl2h) -c -x -o out/onvif.h $^
 
-trans-header: onvif.h
+trans-header: out/onvif.h
 	$(soapcpp2) -ponvif $^
 

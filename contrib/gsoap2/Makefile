@@ -1,11 +1,8 @@
 # contrib/gsoap2/Makfile
 #
 
-ifneq (${CROSS_COMPILER_NAME},)
-COMPILER_NAME	:= ${CROSS_COMPILER_NAME}
-else
-COMPILER_NAME	:= i686-pc-linux-gnu
-endif
+include ../../Common.mk
+
 PWD		:= $(shell pwd)
 
 build: check_source
