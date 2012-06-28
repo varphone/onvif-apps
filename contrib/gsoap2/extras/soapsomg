@@ -15,9 +15,11 @@ my @files = ();
 my $help = 0;
 my @includes = ();
 my @includes_sys = ();
+my @nsmap_files = ();
 my $outdir = ".";
 my $retval = "SOAP_NO_METHOD";
 my $suffix = "-SSOM";
+my %namespaces = ();
 
 GetOptions(
   'extension|e=s' => \$extension,
@@ -25,6 +27,7 @@ GetOptions(
   'help|h|?' => \$help,
   'include|include-local|i=s' => \@includes,
   'include-sys|I=s' => \@includes_sys,
+  'nsmap|n=s' => \@nsmap_files,
   'outdir|o=s' => \$outdir,
   'retval|r=s' => \$retval,
   'suffix|s=s' => \$suffix,
@@ -40,10 +43,11 @@ Options:
       --inclde-local            Add include header(local path).
   -I, --include-sys             Add include header(system path).
   -o, --outdir [.]              Setup output directory.
+  -n, --nsmap					Add nsmap file to processing list.
   -r, --retval [SOAP_NO_MTHOD]  Setup default return value.
   -s, --suffix [SSOM]           Setup source file suffix.
 Examples:
-  ssomg -f soapStub.h -i soapH.h
+  ssomg -f soapStub.h -n wsdd10.nsmap -i soapH.h
   ssomg --file soapStub.h --include soapH.h --suffix=-myssom
         --extension=.cpp --outdir out --retval SOAP_ERROR
 ";
@@ -93,10 +97,13 @@ compiling, linking, and/or using OpenSSL is allowed.
 sub printFooter($) {
 }
 
-sub printWrapperFunction($) {
+sub printWrapperFunction($$@) {
   my $parser = shift;
-  print {$parser->{fd}} "// Method: $parser->{ns}::$parser->{method}\n";
-  print {$parser->{fd}} "$parser->{proto}
+	my $proto = shift;
+  print {$parser->{fd}} "// Method: $parser->{ns}::$proto->{name}\n";
+  print {$parser->{fd}} "$proto->{decl} $proto->{return} $proto->{call} $proto->{name}($proto->{p1t} *soap,
+    $proto->{p2t} *req,
+    $proto->{p3t} *res)
 {
   //TODO: Place your code here.
   return ${retval};
@@ -127,28 +134,96 @@ sub generateOperationsForNS($) {
       $line =~ s/\Q$p3v/\*res/;      
       $parser->{method} = $method;
       $parser->{proto} = $line;
-      printWrapperFunction $parser;
+      printWrapperFunction $parser, "";
     }
   }
   printFooter $parser;
   close $parser->{fd};
 }
 
+sub parseLine($$@) {
+  my $line = shift;
+	my $ns = shift;
+  my %proto = ();
+  if ($line =~ m/^SOAP_FMAC5 int SOAP_FMAC6 __${ns}__/) {
+		$line =~ s/;\s//;
+		$line =~ s/struct soap\*/struct soap \*soap/;
+    my ($decl, $return, $call) = split(/\ /, $line);
+		my $name = $line;
+		$name =~ s/.*\s+(__${ns}__[^\(]*)\(.*/$1/;
+    my $params = $line;      
+    $params =~ s/[^\(]*\(([^)]*)\)*.*/$1/;
+    my ($p1, $p2, $p3) = split(/,/, $params);
+    my ($p1t, $p1v) = split(/ ([^ ]+)$/, $p1);
+    my ($p2t, $p2v) = split(/ ([^ ]+)$/, $p2);
+    my ($p3t, $p3v) = split(/ ([^ ]+)$/, $p3);
+		print "Found: $name\n";
+		$proto{decl} = $decl;
+		$proto{return} = $return;
+		$proto{call} = $call;
+		$proto{name} = $name;
+		$proto{p1t} = $p1t;
+		$proto{p2t} = $p2t;
+		$proto{p3t} = $p3t;
+		print "$p1 $p2 $p3";
+  }
+  return %proto;
+}
+
+sub parseLines($) {
+  my $parser = shift;
+  foreach my $line (@{$parser->{lines}}) {
+    my %proto = parseLine $line, $parser->{ns};
+		if (%proto) {
+			printWrapperFunction $parser, \%proto;
+		}
+  }
+}
+
 sub parseFile($) {
   open(FD, $_[0]) or die("Unable to open: $_[0]\n");
   my @lines = <FD>;
   close(FD);
-  my @nss = probeNamespaces $_[0], \@lines;
+  my @nss = keys %namespaces;
   foreach my $ns (@nss) {
     my %parser = ("srcFile" => $_[0],
       "lines" => \@lines,
       "ns" => $ns,
     );
-    generateOperationsForNS \%parser;
+	  $parser{dstFile} = "$outdir/$parser{ns}${suffix}${extension}";
+	  open $parser{fd}, ">$parser{dstFile}" or die "Unable to open: $parser{dstFile}\n";
+	  print "Generating $parser{dstFile} for $parser{ns}.\n";
+	  printHeader \%parser;
+  	print "Server side methods for $ns:\n";
+		parseLines \%parser;
+		printFooter \%parser;
+		close $parser{fd};
   }
 }
 
 if ($help or not scalar(@files)) { showHelp() and exit; }
+
+sub parseNsmapFile($) {
+	my $file = shift;
+	open FD, $file or die "Unable to open: $file.\n";
+	while (<FD>) {
+		if ($_ =~ m/\s*{.*}.*$/) {
+			my $ns = $_;
+			$ns =~ s/^\s+{\"([^\"]*)\"(.*)$/${1}/;
+			$ns =~ s/[\t\n\r]//;
+			if ($ns !~ m/SOAP-ENV|SOAP-ENC|{NULL, NULL, NULL, NULL}/) {
+				$namespaces{$ns} = 1;
+				print "Namespace: $ns probed.\n";
+			}
+		}
+	}
+	close FD;
+}
+
+foreach my $file (@nsmap_files) {
+  print "Parsing nsmap: $file.\n";
+  parseNsmapFile $file;
+}
 
 foreach my $file (@files) {
   print "Parsing file: $file.\n";
