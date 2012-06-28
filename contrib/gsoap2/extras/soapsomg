@@ -84,6 +84,9 @@ compiling, linking, and/or using OpenSSL is allowed.
   foreach my $i (@includes) {
     print {$parser->{fd}} "#include \"$i\"\n";
   }
+  my $src = $parser->{srcFile};
+  $src =~ s/[^\/]*\/(.*)/$1/;
+  print {$parser->{fd}} "#include \"${src}\"\n";
   print {$parser->{fd}} "\n";
 }
 
@@ -92,6 +95,7 @@ sub printFooter($) {
 
 sub printWrapperFunction($) {
   my $parser = shift;
+  print {$parser->{fd}} "// Method: $parser->{ns}::$parser->{method}\n";
   print {$parser->{fd}} "$parser->{proto}
 {
   //TODO: Place your code here.
@@ -110,6 +114,18 @@ sub generateOperationsForNS($) {
   foreach my $line (@{$parser->{lines}}) {
     if ($line =~ m/^SOAP_FMAC5 int SOAP_FMAC6 __$parser->{ns}__/) {
       $line =~ s/;\s*$//;
+      my $method = $line;
+      $method =~ s/^SOAP_FMAC5 int SOAP_FMAC6 __$parser->{ns}__([^\(]*).*/$1/;
+      $line =~ s/struct soap\*/struct soap \*soap/;
+      my $params = $line;      
+      $params =~ s/[^\(]*\(([^)]*)\)*.*/$1/;
+      my ($p1, $p2, $p3) = split(/,/, $params);
+      my ($p1t, $p1v) = split(/ ([^ ]+)$/, $p1);
+      my ($p2t, $p2v) = split(/ ([^ ]+)$/, $p2);
+      my ($p3t, $p3v) = split(/ ([^ ]+)$/, $p3);
+      $line =~ s/\Q$p2v/\*req/;
+      $line =~ s/\Q$p3v/\*res/;      
+      $parser->{method} = $method;
       $parser->{proto} = $line;
       printWrapperFunction $parser;
     }

@@ -35,6 +35,9 @@ sub_dirs := ver10/device/wsdl\
 xsd_files := ver10/schema/onvif.xsd
 xsl_files := ver20/util/onvif-wsdl-viewer.xsl
 
+ssom_SRCS	= $(wildcard out/*-SSOM.c)
+ssom_OBJS	= $(patsubst %.c,%.o,$(ssom_SRCS))
+
 echo		:= @echo
 mkdir		:= @mkdir
 sed		:= @sed
@@ -42,10 +45,14 @@ test		:= @test
 wget		:= @wget -c --no-http-keep-alive --no-cache
 soapcpp2	:= @${GSOAP2_ROOT}/bin/soapcpp2 -2 -c -dout -I${GSOAP2_ROOT}/include:${GSOAP2_ROOT}/share/gsoap:${GSOAP2_ROOT}/share/gsoap/import
 wsdl2h		:= @${GSOAP2_ROOT}/bin/wsdl2h -t ${GSOAP2_ROOT}/share/gsoap/WS/typemap.dat -nonvif
-soapsomg	:= @${GSOAP2_ROOT}/extras/soapsomg
+soapsomg	:= @${GSOAP2_ROOT}/bin/soapsomg
 base_href	:= http://www.onvif.org/onvif/
 
 all:
+
+test:
+	@echo "$(ssom_SRCS)"
+	@echo "$(ssom_OBJS)"
 
 clean:
 	@rm $(wsdl_files) $(xsd_files) $(xsl_files)
@@ -76,7 +83,7 @@ fetch: $(wsdl_files) $(xsd_files) $(xsl_files)
 #	$(echo) "Patching " $^ " for schemaLocation"
 #	$(sed) -i 's/\(\s*<xs:import namespace="http:\/\/www.onvif.org\/ver10\/schema" schemaLocation="\)\(.*\)\("\/>\)/\1onvif.xsd\3/' $^
 
-translation: trans-wsdl trans-header
+translation: trans-wsdl trans-header trans-ssom
 
 trans-wsdl: $(wsdl_files)
 	$(test) -d out || mkdir -p out
@@ -85,7 +92,28 @@ trans-wsdl: $(wsdl_files)
 trans-header: out/onvif.h
 	$(soapcpp2) -ponvif $^
 
-trans_ssom:
+trans-ssom:
 	$(soapsomg) -f out/onvifStub.h -o out -i onvifH.h -r SOAP_OK
 
+build-libs: out/libonvif_core.so out/libonvif_svr.so libonvif_ssom.so
+	$(CC) $(LDFLAGS) $(CFLAGS) -rdynamic -shared -L. -o out/libonvif_s.so out/onvifServerLib.c -lgsoap
+	$(CC) $(LDFLAGS) $(CFLAGS) -rdynamic -shared -L. -o out/libonvif_ssom.so out/*SSOM.c -lonvif_s.so
+
+out/libonvif_core.so: out/onvifC.o
+	$(CC) $(LDFLAGS) -rdynamic -shared -fPIC -L. -L./out -o out/libonvif_core.so out/onvifC.o
+
+out/libonvif_svr.so: out/onvifServer.o
+	$(CC) $(LDFLAGS) -rdynamic -shared -fPIC -L. -L./out -o $@ $^ -lonvif_core
+
+out/libonvif_ssom.so: out/onvif10-SSOM.o
+	$(CC) $(LDFLAGS) -rdynamic -shared -fPIC -L. -L./out -o $@ $^ -lonvif_core -lonvif_svr
+
+$(filter %.o,$(ssom_OBJS)): %.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+#%.o: out/onvifC.c
+#	$(CC) $(CFLAGS) -c -o $@ $^
+
+#onvifServer.o: onvifServer.c
+#	$(CC) $(CFLAGS) -c -o $@ $^
 
