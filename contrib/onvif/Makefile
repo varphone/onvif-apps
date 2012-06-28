@@ -42,12 +42,13 @@ test		:= @test
 wget		:= @wget -c --no-http-keep-alive --no-cache
 soapcpp2	:= @${GSOAP2_ROOT}/bin/soapcpp2 -2 -c -dout -I${GSOAP2_ROOT}/include:${GSOAP2_ROOT}/share/gsoap:${GSOAP2_ROOT}/share/gsoap/import
 wsdl2h		:= @${GSOAP2_ROOT}/bin/wsdl2h -t ${GSOAP2_ROOT}/share/gsoap/WS/typemap.dat -nonvif
+soapsomg	:= @${GSOAP2_ROOT}/extras/soapsomg
 base_href	:= http://www.onvif.org/onvif/
 
 all:
 
 clean:
-	rm $(wsdl_files) $(xsd_files) $(xsl_files)
+	@rm $(wsdl_files) $(xsd_files) $(xsl_files)
 
 prepare:
 	$(mkdir) -p $(sub_dirs)
@@ -83,4 +84,8 @@ trans-wsdl: $(wsdl_files)
 
 trans-header: out/onvif.h
 	$(soapcpp2) -ponvif $^
+
+trans_ssom:
+	$(soapsomg) -f out/onvifStub.h -o out -i onvifH.h -r SOAP_OK
+
 
