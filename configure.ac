@@ -1,4 +1,10 @@
-AC_INIT([onvif-apps], [1.0], [varphone@qq.com])
+AC_INIT([onvif-apps], [1.0.0-git], [varphone@qq.com])
+VERSION_MAJOR=1
+VERSION_MINOR=0
+VERSION_REVISION=0
+VERSION_EXTRA=0
+VERSION_DEV=git
+
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_PROG_CC_C99
 AC_CONFIG_MACRO_DIR(m4)
@@ -152,6 +158,12 @@ AM_CONDITIONAL(HAVE_LINUX,   test "${SYS}" = "linux")
 AM_CONDITIONAL(HAVE_WIN32,   test "${SYS}" = "mingw32")
 AM_CONDITIONAL(HAVE_WIN64,   test "${HAVE_WIN64}" = "1")
 AM_CONDITIONAL(HAVE_WINCE,   test "${SYS}" = "mingwce")
+
+AC_ARG_ENABLE(ns-onvif1,
+  [  --enable-ns-onvif1        Namespace onvif1 support (default enabled)])
+
+AC_ARG_ENABLE(ns-wsa,
+  [  --enable-ns-wsa           Namespace wsa support (default enabled)])
 
 AC_OUTPUT
 

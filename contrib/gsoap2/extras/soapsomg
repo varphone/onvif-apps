@@ -100,10 +100,30 @@ sub printFooter($) {
 sub printWrapperFunction($$@) {
   my $parser = shift;
 	my $proto = shift;
+  my $params = 0;
   print {$parser->{fd}} "// Method: $parser->{ns}::$proto->{name}\n";
-  print {$parser->{fd}} "$proto->{decl} $proto->{return} $proto->{call} $proto->{name}($proto->{p1t} *soap,
-    $proto->{p2t} *req,
-    $proto->{p3t} *res)
+  print {$parser->{fd}} "$proto->{decl} $proto->{return} $proto->{call} $proto->{name}(";
+  foreach my $p (@{$proto->{params}}) {
+    my %param = %{$p};
+    if ($params gt 0) { print {$parser->{fd}} ",\n    "; }
+    my $v = $param{v};
+    if ($params gt 0) { $v =~ s/([\*& ]*).*/${1}param${params}/ };
+    print {$parser->{fd}} "$param{t} $v";
+    $params++;
+  }
+#  if ($proto->{p1t}) {
+#    print {$parser->{fd}} "$proto->{p1t} $proto->{p1v}";
+#    $params ++;
+#  }
+#  if ($proto->{p2t}) {
+#    if ($params) { print {$parser->{fd}} ","; }
+#    print {$parser->{fd}} "$proto->{p2t} $proto->{p2v}";
+#  }
+#  if ($proto->{p3t}) {
+#    if ($params) { print {$parser->{fd}} ","; }
+#    print {$parser->{fd}} "$proto->{p3t} $proto->{p3v}";
+#  }
+  print {$parser->{fd}} ")
 {
   //TODO: Place your code here.
   return ${retval};
@@ -126,12 +146,12 @@ sub generateOperationsForNS($) {
       $line =~ s/struct soap\*/struct soap \*soap/;
       my $params = $line;      
       $params =~ s/[^\(]*\(([^)]*)\)*.*/$1/;
-      my ($p1, $p2, $p3) = split(/,/, $params);
-      my ($p1t, $p1v) = split(/ ([^ ]+)$/, $p1);
-      my ($p2t, $p2v) = split(/ ([^ ]+)$/, $p2);
-      my ($p3t, $p3v) = split(/ ([^ ]+)$/, $p3);
-      $line =~ s/\Q$p2v/\*req/;
-      $line =~ s/\Q$p3v/\*res/;      
+#      my ($p1, $p2, $p3) = split(/,/, $params);
+#      my ($p1t, $p1v) = split(/ ([^ ]+)$/, $p1);
+#      my ($p2t, $p2v) = split(/ ([^ ]+)$/, $p2);
+#      my ($p3t, $p3v) = split(/ ([^ ]+)$/, $p3);
+#      $line =~ s/\Q$p2v/\*req/;
+#      $line =~ s/\Q$p3v/\*res/;      
       $parser->{method} = $method;
       $parser->{proto} = $line;
       printWrapperFunction $parser, "";
@@ -153,19 +173,30 @@ sub parseLine($$@) {
 		$name =~ s/.*\s+(__${ns}__[^\(]*)\(.*/$1/;
     my $params = $line;      
     $params =~ s/[^\(]*\(([^)]*)\)*.*/$1/;
-    my ($p1, $p2, $p3) = split(/,/, $params);
-    my ($p1t, $p1v) = split(/ ([^ ]+)$/, $p1);
-    my ($p2t, $p2v) = split(/ ([^ ]+)$/, $p2);
-    my ($p3t, $p3v) = split(/ ([^ ]+)$/, $p3);
-		print "Found: $name\n";
+    my @ps = split(/,/, $params);
+    foreach my $p (@ps) {
+      $p =~ s/^\s+//;
+      my ($t, $v) = split(/ ([^ ]+)$/, $p);
+#      print "$p\n$t\n$v\n";
+      push @{$proto{params}}, { "p" => $p, "t" => $t, "v" => $v };
+    }
+#    my ($p1, $p2, $p3) = split(/,/, $all_params);
+#    my ($p1t, $p1v) = split(/ ([^ ]+)$/, $p1);
+#    my ($p2t, $p2v) = split(/ ([^ ]+)$/, $p2);
+#    my ($p3t, $p3v) = split(/ ([^ ]+)$/, $p3);
 		$proto{decl} = $decl;
 		$proto{return} = $return;
 		$proto{call} = $call;
 		$proto{name} = $name;
-		$proto{p1t} = $p1t;
-		$proto{p2t} = $p2t;
-		$proto{p3t} = $p3t;
-		print "$p1 $p2 $p3";
+#		$proto{p1t} = $p1t;
+#    $proto{p1v} = $p1v;
+#		$proto{p2t} = $p2t;
+#    $proto{p2v} = $p2v;
+#    $proto{p2v} = "*req";
+#		$proto{p3t} = $p3t;
+#    $proto{p3v} = $p3v;
+#    $proto{p3v} = "*res";
+		print "Found: $name\n";
   }
   return %proto;
 }
@@ -192,6 +223,7 @@ sub parseFile($) {
     );
 	  $parser{dstFile} = "$outdir/$parser{ns}${suffix}${extension}";
 	  open $parser{fd}, ">$parser{dstFile}" or die "Unable to open: $parser{dstFile}\n";
+    print "\n";
 	  print "Generating $parser{dstFile} for $parser{ns}.\n";
 	  printHeader \%parser;
   	print "Server side methods for $ns:\n";

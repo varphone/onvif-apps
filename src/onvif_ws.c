@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "onvifH.h"
-#include "DeviceBinding.nsmap"
+#include <onvif/onvifH.h>
+#include <onvif/onvifStub.h>
+#include <onvif/DeviceBinding.nsmap>
 
 int main(int argc, char** argv)
 {
