@@ -1,57 +1,23 @@
 ACLOCAL_AMFLAGS = -I m4
 
+include ssom.am
+
 NAMESPACE := onvif
 ONVIFHOME := http://www.onvif.org/onvif/
 
-lib_LTLIBRARIES = libonvif_core.la libonvif_svr.la libonvif_ssom.la
-libonvif_core_la_SOURCES = duration.c onvifC.c onvifH.h
+lib_LTLIBRARIES = libonvif_core.la libonvif_cli.la libonvif_svr.la libonvif_ssom.la
+
+libonvif_core_la_SOURCES = onvifC.c onvifH.h
 libonvif_core_la_LIBADD = -lgsoap
+
+libonvif_cli_la_SOURCES = onvifClient.c onvifStub.h
+libonvif_cli_la_LIBADD = libonvif_core.la
 
 libonvif_svr_la_SOURCES = onvifServer.c onvifH.h onvifStub.h
 libonvif_svr_la_LIBADD = libonvif_core.la
 libonvif_svr_la_DEPENDENCIES =
 
-libonvif_ssom_la_SOURCES = onvif1-SSOM.c\
-	onvif2-SSOM.c\
-  onvif3-SSOM.c\
-  onvif4-SSOM.c\
-  onvif5-SSOM.c\
-  onvif6-SSOM.c\
-  onvif7-SSOM.c\
-  onvif8-SSOM.c\
-  onvif9-SSOM.c\
-  onvif10-SSOM.c\
-  onvif11-SSOM.c\
-  onvif12-SSOM.c\
-  onvif13-SSOM.c\
-  onvif14-SSOM.c\
-  onvif15-SSOM.c\
-  onvif16-SSOM.c\
-  onvif17-SSOM.c\
-  onvif18-SSOM.c\
-  onvif19-SSOM.c\
-  onvif20-SSOM.c\
-  onvif21-SSOM.c\
-  onvif22-SSOM.c\
-  onvif23-SSOM.c\
-  onvif24-SSOM.c\
-  onvif25-SSOM.c\
-  onvif26-SSOM.c\
-  onvif27-SSOM.c\
-  onvif28-SSOM.c\
-  onvif29-SSOM.c\
-  onvif30-SSOM.c\
-  onvif31-SSOM.c\
-  onvif32-SSOM.c\
-  onvif33-SSOM.c\
-  onvif34-SSOM.c\
-  wsa-SSOM.c\
-  wsa5-SSOM.c\
-	wsdd10-SSOM.c\
-  xmime-SSOM.c\
-  xop-SSOM.c\
-  xsd-SSOM.c\
-  xsi-SSOM.c\
+libonvif_ssom_la_SOURCES = $(ssom_SOURCES)
 	onvifStub.h\
 	onvifServer.h\
 	onvifC.h
@@ -63,9 +29,9 @@ onvif_inc_dir = $(includedir)/onvif
 onvif_inc__HEADERS = onvif.h\
 	onvifH.h\
 	onvifStub.h\
-	DeviceBinding.nsmap
+	onvif.nsmap
 
-wsdl_files := ver10/device/wsdl/devicemgmt.wsdl\
+wsdl_FILES := ver10/device/wsdl/devicemgmt.wsdl\
 	ver10/event/wsdl/event.wsdl\
 	ver10/display.wsdl\
 	ver10/deviceio.wsdl\
@@ -81,7 +47,7 @@ wsdl_files := ver10/device/wsdl/devicemgmt.wsdl\
 	ver10/analyticsdevice.wsdl\
 	ver10/actionengine.wsdl
 
-sub_dirs := ver10/device/wsdl\
+wsdl_SUBDIRS := ver10/device/wsdl\
 	ver10/event/wsdl\
 	ver10/media/wsdl\
 	ver10/network/wsdl\
@@ -91,19 +57,21 @@ sub_dirs := ver10/device/wsdl\
 	ver20/ptz/wsdl\
 	ver20/util
 
-xsd_files := ver10/schema/onvif.xsd
-xsl_files := ver20/util/onvif-wsdl-viewer.xsl
+xsd_FILES := ver10/schema/onvif.xsd
+xsl_FILES := ver20/util/onvif-wsdl-viewer.xsl
 
-soapcpp2 := @$(CONTRIB_DIR)/bin/soapcpp2
+soapcpp2 := $(CONTRIB_DIR)/bin/soapcpp2
 soapcpp2_FLAGS := -2 -c -x -p$(NAMESPACE) -I$(CONTRIB_DIR)/include:$(CONTRIB_DIR)/share/gsoap:$(CONTRIB_DIR)/share/gsoap/import
 soapsomg := @$(CONTRIB_DIR)/bin/soapsomg
 soapsomg_FLAGS :=
 wsdl2h := @$(CONTRIB_DIR)/bin/wsdl2h
-wsdl2h_FLAGS := -c -t $(CONTRIB_DIR)/share/gsoap/WS/typemap.dat -n$(NAMESPACE)
+wsdl2h_FLAGS := -c -g -t WS-typemap-onvif.dat -n$(NAMESPACE) -r168.234.217.6:8080
+xmlnsscan := @$(CONTRIB_DIR)/bin/xmlnsscan 
+xmlnsscan_FLAGS := -o xmlns.list
 
-fetch:
-
-fetch: $(wsdl_files) $(xsd_files) $(xsl_files)
+fetch: $(wsdl_FIELS) $(xsd_FILES) $(xsl_FILES)
+	@echo "Patching wsdl files ..."
+	@[ -e wsdl.patch ] && patch -N -p0 < wsdl.patch
 
 %.wsdl:
 	@echo "Fetching" $(ONVIFHOME)$@
@@ -121,11 +89,13 @@ fetch: $(wsdl_files) $(xsd_files) $(xsl_files)
 	$(wget) $(ONVIFHOME)$@ -O $@
 
 translate-wsdl:
-	$(wsdl2h) $(wsdl2h_FLAGS) -o $(NAMESPACE).h $(wsdl_files)
+	$(xmlnsscan) $(xmlnsscan_FLAGS) -f $(wsdl_FILES)
+	$(wsdl2h) $(wsdl2h_FLAGS) -o $(NAMESPACE).h $(wsdl_FILES)
 
 translate-proto:
 	$(soapcpp2) $(soapcpp2_FLAGS) $(NAMESPACE).h
+	@cp DeviceBinding.nsmap $(NAMESPACE).nsmap
 
 translate-ssom:
-	$(soapsomg) -f $(NAMESPACE)Stub.h -n DeviceBinding.nsmap -i $(NAMESPACE)H.h -r SOAP_OK
+	$(soapsomg) -f $(NAMESPACE)Stub.h -n $(NAMESPACE).nsmap -i $(NAMESPACE)H.h -r SOAP_OK
 

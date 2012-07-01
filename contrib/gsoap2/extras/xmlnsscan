@@ -1,0 +1,72 @@
+#!/usr/bin/perl
+use strict;
+use Getopt::Long;# qw(:config no_ignore_case bundling);
+
+print "===========================================================
+XML Namespace Scanner, v1.0
+Webpage: https://github.com/varphone/onvif-apps
+Contact: varphone wong, varphone\@qq.com
+===========================================================
+
+";
+
+my $extension= ".c";
+my @files = ();
+my $help = 0;
+my $outdir = "";
+my $outfile = "xmlns.dat";
+my %namespaces = ();
+
+GetOptions(
+  'file|f=s{1,}' => \@files,
+  'help|h|?' => \$help,
+  'outdir|d=s' => \$outdir,
+  'outfile|o=s' => \$outfile,
+);
+
+sub showHelp() {
+  print "Usage: xmlnsscan --options
+Options:
+  -f, --file                    Add StubHeader file to processing list.
+  -h, --help                    Show help message.
+  -d, --outdir                  Setup output directory.
+  -o, --outfile                 Setup output file.
+Examples:
+  xmlnsscan -f a.wslb.wsl -o wsdlns.list
+  xmlnsscan --file discovery.wsdl --outdir out --outfile wsdlns.list
+";
+}
+
+if ($help or not scalar(@files)) { showHelp() and exit; }
+
+sub parseFile($) {
+  my $file = shift;
+  open FD, $file or die "Unable to open: $file\n";
+  my @lines = <FD>;
+  close(FD);
+  foreach my $line (@lines) {
+    while ($line =~ m/xmlns:([\S]+)=("[^"]*"|\S*)/g) {
+      $namespaces{$1} = $2;
+      print "Found: $1 = $2\n";
+    }
+  }
+}
+
+foreach my $file (@files) {
+  print "Parsing file: $file.\n";
+  parseFile $file;
+}
+
+die "Error: Did not found any xmlns defined.\n" if not scalar %namespaces;
+
+my $size = scalar keys %namespaces;
+print "Found: $size xmlns.\n";
+
+open OFILE, ">$outdir/$outfile" if $outdir;
+open OFILE, ">$outfile" if not $outdir;
+
+foreach my $key (sort keys %namespaces) {
+  print OFILE "$key = $namespaces{$key}\n";
+}
+
+close OFILE;

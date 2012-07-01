@@ -1,0 +1,42 @@
+--- ver10/network/wsdl/remotediscovery.wsdl-orig	2010-11-23 16:16:23.000000000 +0800
++++ ver10/network/wsdl/remotediscovery.wsdl	2012-07-01 02:40:29.000000000 +0800
+@@ -8,16 +8,16 @@
+ THIS DOCUMENT IS PROVIDED "AS IS," AND THE CORPORATION AND ITS MEMBERS AND THEIR AFFILIATES, MAKE NO REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO, WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, OR TITLE; THAT THE CONTENTS OF THIS DOCUMENT ARE SUITABLE FOR ANY PURPOSE; OR THAT THE IMPLEMENTATION OF SUCH CONTENTS WILL NOT INFRINGE ANY PATENTS, COPYRIGHTS, TRADEMARKS OR OTHER RIGHTS.
+ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL, PUNITIVE OR CONSEQUENTIAL DAMAGES, ARISING OUT OF OR RELATING TO ANY USE OR DISTRIBUTION OF THIS DOCUMENT, WHETHER OR NOT (1) THE CORPORATION, MEMBERS OR THEIR AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES, OR (2) SUCH DAMAGES WERE REASONABLY FORESEEABLE, AND ARISING OUT OF OR RELATING TO ANY USE OR DISTRIBUTION OF THIS DOCUMENT.  THE FOREGOING DISCLAIMER AND LIMITATION ON LIABILITY DO NOT APPLY TO, INVALIDATE, OR LIMIT REPRESENTATIONS AND WARRANTIES MADE BY THE MEMBERS AND THEIR RESPECTIVE AFFILIATES TO THE CORPORATION AND OTHER MEMBERS IN CERTAIN WRITTEN POLICIES OF THE CORPORATION.
+ -->
+-<wsdl:definitions xmlns:dn="http://www.onvif.org/ver10/network/wsdl" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.onvif.org/ver10/network/wsdl">
++<wsdl:definitions xmlns:dn="http://schemas.xmlsoap.org/ws/2005/04/discovery" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wl="http://www.onvif.org/ver10/network/wsdl" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://schemas.xmlsoap.org/ws/2005/04/discovery">
+ 	<wsdl:types>
+-		<xs:schema targetNamespace="http://www.onvif.org/ver10/network/wsdl" xmlns:d="http://schemas.xmlsoap.org/ws/2005/04/discovery" elementFormDefault="qualified">
++		<xs:schema targetNamespace="http://schemas.xmlsoap.org/ws/2005/04/discovery" xmlns:d="http://schemas.xmlsoap.org/ws/2005/04/discovery" elementFormDefault="qualified">
+ 			<xs:import namespace="http://schemas.xmlsoap.org/ws/2005/04/discovery" schemaLocation="http://schemas.xmlsoap.org/ws/2005/04/discovery/ws-discovery.xsd"/>
+ 			<!--  Message Request/Responses elements  -->
+ 			<!--===============================-->
+ 			<xs:element name="Hello" type="d:HelloType"/>
+ 			<xs:element name="HelloResponse" type="d:ResolveType"/>
+ 			<xs:element name="Probe" type="d:ProbeType"/>
+-			<xs:element name="ProbeResponse" type="d:ProbeMatchesType"/>
++			<xs:element name="ProbeMatches" type="d:ProbeMatchesType"/>
+ 			<xs:element name="Bye" type="d:ByeType"/>
+ 			<xs:element name="ByeResponse" type="d:ResolveType"/>
+ 			<!--===============================-->
+@@ -32,8 +32,8 @@
+ 	<wsdl:message name="ProbeRequest">
+ 		<wsdl:part name="parameters" element="dn:Probe"/>
+ 	</wsdl:message>
+-	<wsdl:message name="ProbeResponse">
+-		<wsdl:part name="parameters" element="dn:ProbeResponse"/>
++	<wsdl:message name="ProbeMatches">
++		<wsdl:part name="parameters" element="dn:ProbeMatches"/>
+ 	</wsdl:message>
+ 	<wsdl:message name="ByeRequest">
+ 		<wsdl:part name="parameters" element="dn:Bye"/>
+@@ -54,7 +54,7 @@
+ 	<wsdl:portType name="DiscoveryLookupPort">
+ 		<wsdl:operation name="Probe">
+ 			<wsdl:input message="dn:ProbeRequest" dn:Action="http://schemas.xmlsoap.org/ws/2005/04/discovery/Probe"/>
+-			<wsdl:output message="dn:ProbeResponse" dn:Action="http://schemas.xmlsoap.org/ws/2005/04/discovery/ProbeMatches"/>
++			<wsdl:output message="dn:ProbeMatches" dn:Action="http://schemas.xmlsoap.org/ws/2005/04/discovery/ProbeMatches"/>
+ 		</wsdl:operation>
+ 	</wsdl:portType>
+ 	<wsdl:binding name="RemoteDiscoveryBinding" type="dn:RemoteDiscoveryPort">
